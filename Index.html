@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recibo de Dinero - 3 Copias por Hoja A4 - RIBERTEK E.A.S.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #0f172a;
+        }
+
+        .no-print-controls {
+            background: #ffffff;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 210mm;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border: 1px solid #e2e8f0;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .control-group input {
+            padding: 7px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .control-group input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .btn-reset {
+            background-color: #64748b;
+        }
+
+        .btn-reset:hover {
+            background-color: #475569;
+        }
+
+        /* A4 Page Container */
+        .a4-sheet {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            padding: 8mm 10mm;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #0f172a;
+            box-sizing: border-box;
+            border-radius: 2px;
+        }
+
+        /* Single Receipt Item */
+        .receipt-item {
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 10px 14px;
+            height: 90mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            background: #ffffff;
+        }
+
+        .cut-line {
+            border-top: 1px dashed #cbd5e1;
+            text-align: center;
+            height: 0;
+            margin: 2mm 0;
+            position: relative;
+        }
+        
+        .cut-line::after {
+            content: "✂ --------------------------------------------------------------------------------------------------------- ✂";
+            font-size: 9px;
+            color: #94a3b8;
+            position: relative;
+            top: -6px;
+            background: white;
+            padding: 0 8px;
+            font-weight: 500;
+        }
+
+        .header-grid {
+            display: grid;
+            grid-template-columns: 190px 1fr 170px;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 6px;
+        }
+
+        .logo-box {
+            border-left: 3.5px solid #2563eb;
+            padding-left: 8px;
+            text-align: left;
+        }
+
+        .logo-title {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            color: #0f172a;
+        }
+
+        .logo-sub {
+            font-size: 8px;
+            line-height: 1.25;
+            margin-top: 2px;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .title-box {
+            text-align: center;
+        }
+
+        .title-box h1 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #0f172a;
+            text-transform: uppercase;
+        }
+
+        .title-box p {
+            margin: 2px 0 0 0;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .number-box {
+            text-align: right;
+        }
+
+        .currency-tag {
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 3px;
+            color: #0f172a;
+        }
+
+        .receipt-num-display {
+            font-size: 17px;
+            font-weight: 800;
+            color: #dc2626;
+            letter-spacing: 0.5px;
+        }
+
+        .location-date {
+            font-size: 10.5px;
+            font-weight: 600;
+            margin: 4px 0;
+            color: #334155;
+        }
+
+        .field-row {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 3.5px;
+            font-size: 10.5px;
+        }
+
+        .field-label {
+            font-weight: 700;
+            white-space: nowrap;
+            margin-right: 4px;
+            color: #334155;
+        }
+
+        .field-value-line {
+            flex-grow: 1;
+            border-bottom: 1px dashed #94a3b8;
+            padding: 0 4px;
+            font-weight: 500;
+            min-height: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            color: #0f172a;
+        }
+
+        .field-value-shaded {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-weight: 600;
+            white-space: normal;
+            color: #0f172a;
+        }
+
+        .main-body-grid {
+            display: grid;
+            grid-template-columns: 1fr 190px;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9.5px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .invoice-table th, .invoice-table td {
+            border: 1px solid #cbd5e1;
+            padding: 3px 6px;
+            text-align: center;
+        }
+
+        .invoice-table th {
+            background-color: #f1f5f9;
+            font-weight: 700;
+            color: #334155;
+            text-transform: uppercase;
+            font-size: 8.5px;
+            letter-spacing: 0.3px;
+        }
+
+        .invoice-table td.amount {
+            text-align: right;
+        }
+
+        .payment-methods {
+            font-size: 9px;
+        }
+
+        .payment-methods .field-label {
+            font-size: 9px;
+            margin-right: 2px;
+        }
+
+        .payment-methods .amount-field {
+            font-size: 9px;
+        }
+
+        .checkbox-box {
+            width: 13px;
+            height: 13px;
+            border: 1.5px solid #475569;
+            border-radius: 2px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+            color: #0f172a;
+            background: #ffffff;
+        }
+
+        .signature-area {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 3px;
+        }
+
+        .signature-line {
+            border-top: 1px solid #0f172a;
+            width: 160px;
+            text-align: center;
+            padding-top: 3px;
+            font-size: 8.5px;
+            font-weight: 700;
+            color: #475569;
+            letter-spacing: 0.5px;
+        }
+
+        .receipt-footer {
+            font-size: 7.5px;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 3px;
+            margin-top: 2px;
+        }
+
+        .copy-badge {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 8px;
+            background: #f1f5f9;
+            padding: 1px 6px;
+            border-radius: 3px;
+            border: 1px solid #cbd5e1;
+            letter-spacing: 0.3px;
+        }
+
+        /* Contenteditable highlighting */
+        [contenteditable="true"] {
+            outline: 1px dashed #3b82f6;
+            border-radius: 2px;
+            transition: background 0.15s;
+        }
+
+        [contenteditable="true"]:hover {
+            background-color: #eff6ff;
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+
+            body {
+                background: none;
+                padding: 0;
+                margin: 0;
+                color: #000;
+            }
+
+            .no-print-controls {
+                display: none !important;
+            }
+
+            .a4-sheet {
+                box-shadow: none;
+                width: 210mm;
+                height: 297mm;
+                padding: 6mm 8mm;
+                page-break-after: avoid;
+                page-break-inside: avoid;
+                border-radius: 0;
+            }
+
+            .receipt-item {
+                border: 1px solid #000;
+            }
+
+            .header-grid {
+                border-bottom: 2px solid #000;
+            }
+
+            .logo-box {
+                border-left: 3px solid #000;
+            }
+
+            .invoice-table th, .invoice-table td {
+                border: 1px solid #000;
+            }
+
+            .invoice-table th {
+                background-color: #f0f0f0 !important;
+                color: #000;
+            }
+
+            .field-value-shaded {
+                background-color: #f5f5f5 !important;
+                border: 1px solid #ccc;
+            }
+
+            .currency-tag, .copy-badge {
+                background: none !important;
+                border: 1px solid #000;
+            }
+
+            [contenteditable="true"] {
+                outline: none;
+            }
+
+            .cut-line::after {
+                background: white;
+            }
+
+            .receipt-num-display {
+                color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print-controls">
+        <div class="control-group">
+            <label for="numInput">Nº Recibo Actual:</label>
+            <input type="number" id="numInput" value="38419" style="width: 100px;">
+        </div>
+        <div class="control-group">
+            <button class="btn" onclick="imprimirYAvanzar()">🖨️ Imprimir Hoja A4 (3 Copias)</button>
+            <button class="btn btn-reset" onclick="resetearValores()">🔄 Restablecer</button>
+        </div>
+    </div>
+
+    <!-- A4 Sheet Container -->
+    <div class="a4-sheet">
+
+        <!-- COPY 1: ORIGINAL -->
+        <div class="receipt-item" id="copy-1">
+            <div class="header-grid">
+                <div class="logo-box">
+                    <div class="logo-title">RIBERTEK E.A.S.</div>
+                    <div class="logo-sub">
+                        Tel.: (0994) 354 - 328<br>
+                        La Paz 910 e/ Av. Colón y Montevideo - C.P. 1016<br>
+                        Asunción - Paraguay
+                    </div>
+                </div>
+                <div class="title-box">
+                    <h1>RECIBO DE DINERO</h1>
+                    <p>RUC: 80165981 - 7</p>
+                </div>
+                <div class="number-box">
+                    <div class="currency-tag">Gs. <span class="sync-amount" contenteditable="true">1.978.500</span></div>
+                    <div style="font-size: 11px; font-weight: 700; color: #475569;">Nº <span class="receipt-num-display">0038419</span></div>
+                </div>
+            </div>
+
+            <div class="location-date">
+                Asunción, <span class="sync-day" contenteditable="true">19</span> de <span class="sync-month" contenteditable="true">Agosto</span> de 20<span class="sync-year" contenteditable="true">26</span>
+            </div>
+
+            <div class="field-row">
+                <span class="field-label">Recibí de:</span>
+                <div class="field-value-line sync-client" contenteditable="true">Ribertek E.A.S.</div>
+                <span class="field-label" style="margin-left: 8px;">RUC:</span>
+                <div class="field-value-line sync-ruc" style="flex-grow: 0; width: 120px;" contenteditable="true">80165981-7</div>
+            </div>
+
+            <div class="field-row">
+                <span class="field-label">La cantidad de:</span>
+                <div class="field-value-line field-value-shaded sync-words" contenteditable="true">guaranies un millon novecientos setenta y ocho mil quinientos</div>
+            </div>
+
+            <div class="field-row">
+                <span class="field-label">En concepto de:</span>
+                <div class="field-value-line sync-concept" contenteditable="true">R 38419 - Cancelacion fact 8640</div>
+            </div>
+
+            <div class="main-body-grid">
+                <div class="payment-methods">
+                    <div class="field-row" style="margin-bottom: 2px;">
+                        <span class="field-label">Retención Nº:</span>
+                        <div class="field-value-line sync-ret-num" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Monto:</span>
+                        <div class="field-value-line sync-ret-monto amount-field" style="width: 80px; flex-grow:0;" contenteditable="true"></div>
+                    </div>
+                    <div class="field-row" style="margin-bottom: 2px;">
+                        <span class="field-label">Cheque Nº:</span>
+                        <div class="field-value-line sync-chk-num" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Monto:</span>
+                        <div class="field-value-line sync-chk-monto amount-field" style="width: 75px; flex-grow:0;" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Banco:</span>
+                        <div class="field-value-line sync-chk-banco" style="width: 55px; flex-grow:0;" contenteditable="true"></div>
+                    </div>
+                    <div class="field-row" style="margin-bottom: 2px;">
+                        <span class="field-label">Transf. Nº:</span>
+                        <div class="field-value-line sync-transf-num" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Monto:</span>
+                        <div class="field-value-line sync-transf-monto amount-field" style="width: 75px; flex-grow:0;" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Banco:</span>
+                        <div class="field-value-line sync-transf-banco" style="width: 55px; flex-grow:0;" contenteditable="true"></div>
+                    </div>
+                    <div class="field-row" style="margin-top: 4px; gap: 14px;">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <span class="field-label">Efectivo</span>
+                            <div class="checkbox-box sync-chk-efectivo" contenteditable="true">X</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <span class="field-label">Transf. Bancaria</span>
+                            <div class="checkbox-box sync-chk-transf" contenteditable="true"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>FACTURA Nº</th>
+                                <th>IMPORTE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="sync-fact-1" contenteditable="true">003-001-0008640</td>
+                                <td class="sync-imp-1 amount amount-field" contenteditable="true">1.978.500</td>
+                            </tr>
+                            <tr>
+                                <td class="sync-fact-2" contenteditable="true">&nbsp;</td>
+                                <td class="sync-imp-2 amount amount-field" contenteditable="true"></td>
+                            </tr>
+                            <tr>
+                                <td class="sync-fact-3" contenteditable="true">&nbsp;</td>
+                                <td class="sync-imp-3 amount amount-field" contenteditable="true"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TOTAL</strong></td>
+                                <td class="sync-amount amount"><strong>1.978.500</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="signature-area">
+                <div class="signature-line">FIRMA</div>
+            </div>
+
+            <div class="receipt-footer">
+                <div></div>
+                <div class="copy-badge">ORIGINAL: CLIENTE</div>
+            </div>
+        </div>
+
+        <div class="cut-line"></div>
+
+        <!-- COPY 2: DUPLICADO -->
+        <div class="receipt-item" id="copy-2">
+            <div class="header-grid">
+                <div class="logo-box">
+                    <div class="logo-title">RIBERTEK E.A.S.</div>
+                    <div class="logo-sub">
+                        Tel.: (0994) 354 - 328<br>
+                        La Paz 910 e/ Av. Colón y Montevideo - C.P. 1016<br>
+                        Asunción - Paraguay
+                    </div>
+                </div>
+                <div class="title-box">
+                    <h1>RECIBO DE DINERO</h1>
+                    <p>RUC: 80165981 - 7</p>
+                </div>
+                <div class="number-box">
+                    <div class="currency-tag">Gs. <span class="sync-amount" contenteditable="true">1.978.500</span></div>
+                    <div style="font-size: 11px; font-weight: 700; color: #475569;">Nº <span class="receipt-num-display">0038419</span></div>
+                </div>
+            </div>
+
+            <div class="location-date">
+                Lambaré, <span class="sync-day" contenteditable="true">19</span> de <span class="sync-month" contenteditable="true">Agosto</span> de 20<span class="sync-year" contenteditable="true">26</span>
+            </div>
+
+            <div class="field-row">
+                <span class="field-label">Recibí de:</span>
+                <div class="field-value-line sync-client" contenteditable="true">Ribertek E.A.S.</div>
+                <span class="field-label" style="margin-left: 8px;">RUC:</span>
+                <div class="field-value-line sync-ruc" style="flex-grow: 0; width: 120px;" contenteditable="true">80165981-7</div>
+            </div>
+
+            <div class="field-row">
+                <span class="field-label">La cantidad de:</span>
+                <div class="field-value-line field-value-shaded sync-words" contenteditable="true">guaranies un millon novecientos setenta y ocho mil quinientos</div>
+            </div>
+
+            <div class="field-row">
+                <span class="field-label">En concepto de:</span>
+                <div class="field-value-line sync-concept" contenteditable="true">R 38419 - Cancelacion fact 8640</div>
+            </div>
+
+            <div class="main-body-grid">
+                <div class="payment-methods">
+                    <div class="field-row" style="margin-bottom: 2px;">
+                        <span class="field-label">Retención Nº:</span>
+                        <div class="field-value-line sync-ret-num" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Monto:</span>
+                        <div class="field-value-line sync-ret-monto amount-field" style="width: 80px; flex-grow:0;" contenteditable="true"></div>
+                    </div>
+                    <div class="field-row" style="margin-bottom: 2px;">
+                        <span class="field-label">Cheque Nº:</span>
+                        <div class="field-value-line sync-chk-num" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Monto:</span>
+                        <div class="field-value-line sync-chk-monto amount-field" style="width: 75px; flex-grow:0;" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Banco:</span>
+                        <div class="field-value-line sync-chk-banco" style="width: 55px; flex-grow:0;" contenteditable="true"></div>
+                    </div>
+                    <div class="field-row" style="margin-bottom: 2px;">
+                        <span class="field-label">Transf. Nº:</span>
+                        <div class="field-value-line sync-transf-num" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Monto:</span>
+                        <div class="field-value-line sync-transf-monto amount-field" style="width: 75px; flex-grow:0;" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Banco:</span>
+                        <div class="field-value-line sync-transf-banco" style="width: 55px; flex-grow:0;" contenteditable="true"></div>
+                    </div>
+                    <div class="field-row" style="margin-top: 4px; gap: 14px;">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <span class="field-label">Efectivo</span>
+                            <div class="checkbox-box sync-chk-efectivo" contenteditable="true">X</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <span class="field-label">Transf. Bancaria</span>
+                            <div class="checkbox-box sync-chk-transf" contenteditable="true"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>FACTURA Nº</th>
+                                <th>IMPORTE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="sync-fact-1" contenteditable="true">003-001-0008640</td>
+                                <td class="sync-imp-1 amount amount-field" contenteditable="true">1.978.500</td>
+                            </tr>
+                            <tr>
+                                <td class="sync-fact-2" contenteditable="true">&nbsp;</td>
+                                <td class="sync-imp-2 amount amount-field" contenteditable="true"></td>
+                            </tr>
+                            <tr>
+                                <td class="sync-fact-3" contenteditable="true">&nbsp;</td>
+                                <td class="sync-imp-3 amount amount-field" contenteditable="true"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TOTAL</strong></td>
+                                <td class="sync-amount amount"><strong>1.978.500</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="signature-area">
+                <div class="signature-line">FIRMA</div>
+            </div>
+
+            <div class="receipt-footer">
+                <div></div>
+                <div class="copy-badge">DUPLICADO: ARCHIVO</div>
+            </div>
+        </div>
+
+        <div class="cut-line"></div>
+
+        <!-- COPY 3: TRIPLICADO -->
+        <div class="receipt-item" id="copy-3">
+            <div class="header-grid">
+                <div class="logo-box">
+                    <div class="logo-title">RIBERTEK E.A.S.</div>
+                    <div class="logo-sub">
+                        Tel.: (0994) 354 - 328<br>
+                        La Paz 910 e/ Av. Colón y Montevideo - C.P. 1016<br>
+                        Asunción - Paraguay
+                    </div>
+                </div>
+                <div class="title-box">
+                    <h1>RECIBO DE DINERO</h1>
+                    <p>RUC: 80165981 - 7</p>
+                </div>
+                <div class="number-box">
+                    <div class="currency-tag">Gs. <span class="sync-amount" contenteditable="true">1.978.500</span></div>
+                    <div style="font-size: 11px; font-weight: 700; color: #475569;">Nº <span class="receipt-num-display">0038419</span></div>
+                </div>
+            </div>
+
+            <div class="location-date">
+                Lambaré, <span class="sync-day" contenteditable="true">19</span> de <span class="sync-month" contenteditable="true">Agosto</span> de 20<span class="sync-year" contenteditable="true">26</span>
+            </div>
+
+            <div class="field-row">
+                <span class="field-label">Recibí de:</span>
+                <div class="field-value-line sync-client" contenteditable="true">Ribertek E.A.S.</div>
+                <span class="field-label" style="margin-left: 8px;">RUC:</span>
+                <div class="field-value-line sync-ruc" style="flex-grow: 0; width: 120px;" contenteditable="true">80165981-7</div>
+            </div>
+
+            <div class="field-row">
+                <span class="field-label">La cantidad de:</span>
+                <div class="field-value-line field-value-shaded sync-words" contenteditable="true">guaranies un millon novecientos setenta y ocho mil quinientos</div>
+            </div>
+
+            <div class="field-row">
+                <span class="field-label">En concepto de:</span>
+                <div class="field-value-line sync-concept" contenteditable="true">R 38419 - Cancelacion fact 8640</div>
+            </div>
+
+            <div class="main-body-grid">
+                <div class="payment-methods">
+                    <div class="field-row" style="margin-bottom: 2px;">
+                        <span class="field-label">Retención Nº:</span>
+                        <div class="field-value-line sync-ret-num" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Monto:</span>
+                        <div class="field-value-line sync-ret-monto amount-field" style="width: 80px; flex-grow:0;" contenteditable="true"></div>
+                    </div>
+                    <div class="field-row" style="margin-bottom: 2px;">
+                        <span class="field-label">Cheque Nº:</span>
+                        <div class="field-value-line sync-chk-num" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Monto:</span>
+                        <div class="field-value-line sync-chk-monto amount-field" style="width: 75px; flex-grow:0;" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Banco:</span>
+                        <div class="field-value-line sync-chk-banco" style="width: 55px; flex-grow:0;" contenteditable="true"></div>
+                    </div>
+                    <div class="field-row" style="margin-bottom: 2px;">
+                        <span class="field-label">Transf. Nº:</span>
+                        <div class="field-value-line sync-transf-num" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Monto:</span>
+                        <div class="field-value-line sync-transf-monto amount-field" style="width: 75px; flex-grow:0;" contenteditable="true"></div>
+                        <span class="field-label" style="margin-left: 4px;">Banco:</span>
+                        <div class="field-value-line sync-transf-banco" style="width: 55px; flex-grow:0;" contenteditable="true"></div>
+                    </div>
+                    <div class="field-row" style="margin-top: 4px; gap: 14px;">
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <span class="field-label">Efectivo</span>
+                            <div class="checkbox-box sync-chk-efectivo" contenteditable="true">X</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 4px;">
+                            <span class="field-label">Transf. Bancaria</span>
+                            <div class="checkbox-box sync-chk-transf" contenteditable="true"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>FACTURA Nº</th>
+                                <th>IMPORTE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="sync-fact-1" contenteditable="true">003-001-0008640</td>
+                                <td class="sync-imp-1 amount amount-field" contenteditable="true">1.978.500</td>
+                            </tr>
+                            <tr>
+                                <td class="sync-fact-2" contenteditable="true">&nbsp;</td>
+                                <td class="sync-imp-2 amount amount-field" contenteditable="true"></td>
+                            </tr>
+                            <tr>
+                                <td class="sync-fact-3" contenteditable="true">&nbsp;</td>
+                                <td class="sync-imp-3 amount amount-field" contenteditable="true"></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TOTAL</strong></td>
+                                <td class="sync-amount amount"><strong>1.978.500</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="signature-area">
+                <div class="signature-line">FIRMA</div>
+            </div>
+
+            <div class="receipt-footer">
+                <div></div>
+                <div class="copy-badge">TRIPLICADO: COBRANZAS</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const numInput = document.getElementById('numInput');
+        const numDisplays = document.querySelectorAll('.receipt-num-display');
+
+        function formatNum(num) {
+            return String(num).padStart(7, '0');
+        }
+
+        function parseAmount(str) {
+            if (!str) return 0;
+            let clean = str.replace(/[^0-9]/g, '');
+            return parseInt(clean, 10) || 0;
+        }
+
+        function formatThousands(val) {
+            if (!val && val !== 0) return '';
+            let num = typeof val === 'number' ? val : parseAmount(val);
+            if (num === 0 && (val === '' || val === null || val === undefined)) return '';
+            return num.toLocaleString('de-DE');
+        }
+
+        // Convert number to Spanish words (Guaraníes)
+        function numeroALetras(num) {
+            num = Math.floor(num);
+            if (num === 0) return 'guaranies cero';
+
+            const Unidades = num => {
+                switch(num) {
+                    case 1: return 'un';
+                    case 2: return 'dos';
+                    case 3: return 'tres';
+                    case 4: return 'cuatro';
+                    case 5: return 'cinco';
+                    case 6: return 'seis';
+                    case 7: return 'siete';
+                    case 8: return 'ocho';
+                    case 9: return 'nueve';
+                    default: return '';
+                }
+            };
+
+            const Decenas = num => {
+                let decena = Math.floor(num / 10);
+                let unidad = num - (decena * 10);
+
+                switch(decena) {
+                    case 1:
+                        switch(unidad) {
+                            case 0: return 'diez';
+                            case 1: return 'once';
+                            case 2: return 'doce';
+                            case 3: return 'trece';
+                            case 4: return 'catorce';
+                            case 5: return 'quince';
+                            default: return 'dieci' + Unidades(unidad);
+                        }
+                    case 2:
+                        switch(unidad) {
+                            case 0: return 'veinte';
+                            default: return 'veinti' + Unidades(unidad);
+                        }
+                    case 3: return DecenasY('treinta', unidad);
+                    case 4: return DecenasY('cuarenta', unidad);
+                    case 5: return DecenasY('cincuenta', unidad);
+                    case 6: return DecenasY('sesenta', unidad);
+                    case 7: return DecenasY('setenta', unidad);
+                    case 8: return DecenasY('ochenta', unidad);
+                    case 9: return DecenasY('noventa', unidad);
+                    case 0: return Unidades(unidad);
+                }
+            };
+
+            const DecenasY = (strSin, numUnidades) => numUnidades > 0 ? strSin + ' y ' + Unidades(numUnidades) : strSin;
+
+            const Centenas = num => {
+                let centenas = Math.floor(num / 100);
+                let decenas = num - (centenas * 100);
+
+                switch(centenas) {
+                    case 1: return decenas > 0 ? 'ciento ' + Decenas(decenas) : 'cien';
+                    case 2: return 'doscientos ' + Decenas(decenas);
+                    case 3: return 'trescientos ' + Decenas(decenas);
+                    case 4: return 'cuatrocientos ' + Decenas(decenas);
+                    case 5: return 'quinientos ' + Decenas(decenas);
+                    case 6: return 'seiscientos ' + Decenas(decenas);
+                    case 7: return 'setecientos ' + Decenas(decenas);
+                    case 8: return 'ochocientos ' + Decenas(decenas);
+                    case 9: return 'novecentos ' + Decenas(decenas);
+                }
+                return Decenas(decenas);
+            };
+
+            const Secciones = (num, divisor, strSingular, strPlural) => {
+                let cientos = Math.floor(num / divisor);
+                let resto = num - (cientos * divisor);
+                let letras = '';
+
+                if (cientos > 0) {
+                    if (cientos > 1) {
+                        letras = Centenas(cientos) + ' ' + strPlural;
+                    } else {
+                        letras = strSingular;
+                    }
+                }
+                if (resto > 0) {
+                    letras += ' ';
+                }
+                return letras;
+            };
+
+            const Miles = num => {
+                let divisor = 1000;
+                let cientos = Math.floor(num / divisor);
+                let resto = num - (cientos * divisor);
+                let strMiles = Secciones(num, divisor, 'un mil', 'mil');
+                let strCentenas = Centenas(resto);
+
+                if (strMiles === '') return strCentenas;
+                return (strMiles + ' ' + strCentenas).trim();
+            };
+
+            const Millones = num => {
+                let divisor = 1000000;
+                let cientos = Math.floor(num / divisor);
+                let resto = num - (cientos * divisor);
+                let strMillones = Secciones(num, divisor, 'un millon', 'millones');
+                let strMiles = Miles(resto);
+
+                if (strMillones === '') return strMiles;
+                return (strMillones + ' ' + strMiles).trim();
+            };
+
+            return ('guaranies ' + Millones(num)).trim();
+        }
+
+        function autoUpdateWords() {
+            const amounts = document.querySelectorAll('.sync-amount');
+            let text = '';
+            if (amounts.length > 0) {
+                text = amounts[0].innerText || amounts[0].textContent;
+            }
+            
+            let val = parseAmount(text);
+
+            if (val >= 0) {
+                let words = numeroALetras(val);
+                document.querySelectorAll('.sync-words').forEach(el => {
+                    el.textContent = words;
+                });
+            }
+        }
+
+        function recalculateTotal() {
+            let imp1 = parseAmount(document.querySelector('.sync-imp-1').innerText);
+            let imp2 = parseAmount(document.querySelector('.sync-imp-2').innerText);
+            let imp3 = parseAmount(document.querySelector('.sync-imp-3').innerText);
+            let total = imp1 + imp2 + imp3;
+            
+            let formatted = total > 0 ? formatThousands(total) : '';
+            
+            document.querySelectorAll('.sync-amount').forEach(el => {
+                if (el.tagName === 'TD' || el.tagName === 'SPAN') {
+                    if (el.children.length > 0 && el.children[0].tagName === 'STRONG') {
+                        el.children[0].textContent = formatted;
+                    } else {
+                        el.textContent = formatted;
+                    }
+                }
+            });
+        }
+
+        // Format an element with thousand separators while typing/leaving field
+        function applyThousandFormatting(element) {
+            let rawText = element.innerText || element.textContent;
+            let val = parseAmount(rawText);
+            if (val > 0) {
+                element.textContent = formatThousands(val);
+            } else if (rawText.trim() === '0') {
+                element.textContent = '0';
+            } else {
+                element.textContent = '';
+            }
+        }
+
+        // Load persisted receipt number
+        let currentNumber = localStorage.getItem('tecnimet_receipt_num') || 38419;
+        numInput.value = currentNumber;
+        updateAllNumbers(currentNumber);
+
+        function updateAllNumbers(val) {
+            let formatted = formatNum(val);
+            numDisplays.forEach(el => el.textContent = formatted);
+            localStorage.setItem('tecnimet_receipt_num', val);
+        }
+
+        numInput.addEventListener('input', function() {
+            let val = parseInt(this.value, 10);
+            if (!isNaN(val)) {
+                updateAllNumbers(val);
+            }
+        });
+
+        // Live Synchronize fields across Original, Duplicado, and Triplicado
+        const syncClasses = [
+            'sync-amount', 'sync-day', 'sync-month', 'sync-year',
+            'sync-client', 'sync-ruc', 'sync-words', 'sync-concept',
+            'sync-ret-num', 'sync-ret-monto', 'sync-chk-num', 'sync-chk-monto',
+            'sync-chk-banco', 'sync-chk-efectivo', 'sync-chk-transf',
+            'sync-transf-num', 'sync-transf-monto', 'sync-transf-banco',
+            'sync-fact-1', 'sync-imp-1', 'sync-fact-2', 'sync-imp-2', 'sync-fact-3', 'sync-imp-3'
+        ];
+
+        syncClasses.forEach(className => {
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains(className)) {
+                    let htmlContent = e.target.innerHTML;
+                    let targets = document.querySelectorAll('.' + className);
+                    targets.forEach(t => {
+                        if (t !== e.target) {
+                            t.innerHTML = htmlContent;
+                        }
+                    });
+
+                    if (className.startsWith('sync-imp-')) {
+                        recalculateTotal();
+                        autoUpdateWords();
+                    } else if (className === 'sync-amount') {
+                        autoUpdateWords();
+                    }
+                }
+            });
+
+            // On blur, apply thousand separator format to amount fields
+            document.addEventListener('blur', function(e) {
+                if (e.target.classList.contains(className) && e.target.classList.contains('amount-field')) {
+                    applyThousandFormatting(e.target);
+                    let formattedContent = e.target.innerHTML;
+                    document.querySelectorAll('.' + className).forEach(t => {
+                        t.innerHTML = formattedContent;
+                    });
+                    if (className.startsWith('sync-imp-')) {
+                        recalculateTotal();
+                        autoUpdateWords();
+                    }
+                }
+            }, true);
+        });
+
+        // Initial trigger for auto conversion and formatting
+        autoUpdateWords();
+
+        function imprimirYAvanzar() {
+            window.print();
+            
+            // Advance number automatically
+            let nextNum = parseInt(numInput.value, 10) + 1;
+            numInput.value = nextNum;
+            updateAllNumbers(nextNum);
+        }
+
+        function resetearValores() {
+            if (confirm('¿Desea restablecer el número correlativo a 38419?')) {
+                numInput.value = 38419;
+                updateAllNumbers(38419);
+            }
+        }
+    </script>
+</body>
+</html>
